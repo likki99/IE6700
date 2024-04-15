@@ -633,3 +633,5 @@ products_df = pd.DataFrame({
 
 # Display the first few rows of the DataFrame to check
 print(products_df.head())
+
+products_df.to_csv("path here", index=False)

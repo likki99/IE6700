@@ -26,3 +26,5 @@ customer_df = pd.DataFrame({
 
 # Display the first few rows of the DataFrame to check
 print(customer_df.head())
+
+customer_df.to_csv("customers", index = False)
