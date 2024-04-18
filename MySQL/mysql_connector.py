@@ -1,60 +1,74 @@
 import mysql.connector
+from mysql.connector import errorcode
+
+
+config = {
+    "host": "localhost",
+    "user": "root",
+    "password": "AkkiLikki@9799",
+    "database": "BREWS",
+}
+
+
 class EcommerceInventoryManagementApp:
     def __init__(self):
-        self.host = 'localhost'
-        self.database = 'ecomm_inv_mgmt'
-        self.user = 'root'
-        self.password = 'User@6484'
         self.connection = None
-    
 
-    def connect(self):
+    def db_read(self, query, params=None):
         try:
-            self.connection = mysql.connector.connect(
-            host=self.host,
-            database=self.database,
-            user=self.user,
-            password=self.password
-            )
-            print("Connected to MySQL Server")
-        except mysql.connector.Error as error:
-            print("Error while connecting to MySQL:", error)
+            self.connection = mysql.connector.connect(**config)
+            cursor = self.connection.cursor(dictionary=True)
+            if params:
+                cursor.execute(query, params)
+            else:
+                cursor.execute(query)
 
-
-    def disconnect(self):
-        if self.connection.is_connected():
-            self.connection.close()
-            print("MySQL connection is closed")
-
-
-    def execute_query(self, query):
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(query)
-            records = cursor.fetchall()
+            entries = cursor.fetchall()
             cursor.close()
-            return records
-        except mysql.connector.Error as error:
-            print("Error executing SQL query:", error)
-            return None
+            self.connection.close()
 
+            content = []
 
-    def get_tables(self):
+            for entry in entries:
+                content.append(entry)
+
+            return content
+        
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("User authorization error")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database doesn't exist")
+            else:
+                print(err)
+
+        finally:
+            if self.connection.is_connected():
+                cursor.close()
+                self.connection.close()
+                print("Connection closed")
+
+    def list_tables(self):
         query = "SHOW TABLES"
-        tables = self.execute_query(query)
+        tables = self.db_read(query)
         if tables:
-            return [table[0] for table in tables]
+            return [table["Tables_in_brews"] for table in tables]
         else:
             return None
+
+    def describe_table(self, table_name):
+        query = f"DESCRIBE TABLE {table_name}"
+        response = self.db_read(query)
+        return response
 
 
 if __name__ == "__main__":
     app = EcommerceInventoryManagementApp()
-    app.connect()
     # Fetch all tables
-    tables = app.get_tables()
-    if tables:
-        print("Tables in the database:")
-        for table in tables:
-            print(table)
-    app.disconnect()
+    # tables = app.get_tables()
+    # if tables:
+    #     print("Tables in the database:")
+    #     for table in tables:
+    #         print(table)
+    desc = app.describe_table("TRANSACTIONS")
+    tables = app.list_tables()
