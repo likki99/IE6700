@@ -3,8 +3,7 @@ CREATE TABLE CUSTOMER (
     customer_id VARCHAR(255) PRIMARY KEY,
     gender VARCHAR(10),
     age INT,
-    number_of_purchases INT,
-    location VARCHAR(255)
+    number_of_purchases INT
 );
 
 
