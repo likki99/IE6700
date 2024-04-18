@@ -1,5 +1,14 @@
+-- 8. Customer visits table
+CREATE TABLE CUSTOMER_VISITS (
+    customer_id VARCHAR(255) NOT NULL,
+    store_id VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_store_id_customer_visits FOREIGN KEY (store_id) REFERENCES STORE (store_id),
+    CONSTRAINT fk_customer_id_customer_visits FOREIGN KEY (customer_id) REFERENCES CUSTOMER(customer_id)
+);
+
+
 INSERT INTO
-    customer_vistis (customer_id, store_id)
+    CUSTOMER_VISITS (customer_id, store_id)
 VALUES
     ('cus_aduytjr68y', 'sto_xwjzpagm9u'),
     ('cus_cm8yr33xza', 'sto_emaphfmi7i'),
