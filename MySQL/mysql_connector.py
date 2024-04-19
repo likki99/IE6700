@@ -1,22 +1,14 @@
 import mysql.connector
 from mysql.connector import errorcode
+import config as cf
 
-
-config = {
-    "host": "localhost",
-    "user": "root",
-    "password": "AkkiLikki@9799",
-    "database": "BREWS",
-}
-
-
-class EcommerceInventoryManagementApp:
+class RevitalizingBrewsApp:
     def __init__(self):
         self.connection = None
 
     def db_read(self, query, params=None):
         try:
-            self.connection = mysql.connector.connect(**config)
+            self.connection = mysql.connector.connect(**cf.config)
             cursor = self.connection.cursor(dictionary=True)
             if params:
                 cursor.execute(query, params)
@@ -63,12 +55,9 @@ class EcommerceInventoryManagementApp:
 
 
 if __name__ == "__main__":
-    app = EcommerceInventoryManagementApp()
-    # Fetch all tables
-    # tables = app.get_tables()
-    # if tables:
-    #     print("Tables in the database:")
-    #     for table in tables:
-    #         print(table)
+    app = RevitalizingBrewsApp()
     desc = app.describe_table("TRANSACTIONS")
     tables = app.list_tables()
+
+    print(desc)
+    print(tables)
