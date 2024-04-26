@@ -21,7 +21,7 @@ CREATE (:CUSTOMER {customer_id: row.customer_id, gender: row.gender, age: toInte
 
 // Import promotions
 LOAD CSV WITH HEADERS FROM 'file:///promotions.csv' AS row
-CREATE (:PROMOTION {offer_id: row.offer_id, location: row.location, store_address: row.store_address});
+CREATE (:PROMOTION {offer_id: row.offer_id, location: row.location, store_address: row.store_address, offer_type: row.offer_type});
 
 
 // RELATIONSHIPS
